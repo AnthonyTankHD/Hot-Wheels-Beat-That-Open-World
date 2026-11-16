@@ -1,0 +1,25 @@
+# Build outputs
+build/
+dist/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+
+# Game install / extracted original assets (not redistributed)
+game-install/
+extracted/
+*.arc
+cdfiles.dat
+cdfiles.ar
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Dependencies
+node_modules/
