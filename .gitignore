@@ -23,3 +23,9 @@ cdfiles.ar
 
 # Dependencies
 node_modules/
+
+# Godot
+.godot/
+*.godot.uid
+export/
+*.pck
