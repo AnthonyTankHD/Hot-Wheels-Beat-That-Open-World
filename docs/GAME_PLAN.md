@@ -14,6 +14,21 @@ The app is the hub, the game is the playground.
 Open source (MIT) and customizable. A built-in mod manager to browse,
 download, and enable community-made mods.
 
+## Engine and platforms
+
+- **Engine: Godot 4.3** (open source, MIT). Chosen 2026-11-15.
+- **Platforms:** native on Steam Deck / SteamOS, other Linux distros,
+  Windows, and Mac — all up to date, same game, same build.
+- **Controllers:** full support for XInput (Xbox) and PlayStation
+  controllers, with haptic feedback (rumble) — e.g. on boost pads,
+  landings, and hard steering at speed.
+- **Controls:** W/S or RT/LT = gas/brake, A/D or left stick / D-pad =
+  steer (camera-relative), C buttons = camera orbit/zoom.
+- The project lives in `src/godot/` (`project.godot`, `scenes/`,
+  `scripts/`). First playable prototype: a driving scene with the
+  arcade handling from the Toy Box rebuild (acceleration curve,
+  camera-relative steering, proportional steering, grip loss).
+
 ## Why Beat That
 
 - 2007 PC game, abandonware (Eutechnyx defunct, Activision no longer
