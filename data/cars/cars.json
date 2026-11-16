@@ -1,0 +1,782 @@
+[
+  {
+    "name": "16ANGELS",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.067
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "16ANGELS"
+  },
+  {
+    "name": "24SEVEN",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.103
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "24SEVEN"
+  },
+  {
+    "name": "BONESHAKER",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.051
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "BONESHAKER"
+  },
+  {
+    "name": "BRUTALISTIC",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.065
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "BRUTALISTIC"
+  },
+  {
+    "name": "BULLYGOAT",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.113
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "BULLYGOAT"
+  },
+  {
+    "name": "CHICANE",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.013
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "CHICANE"
+  },
+  {
+    "name": "COOLONE",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.68
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "COOLONE"
+  },
+  {
+    "name": "COVELITE",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.082
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "COVELITE"
+  },
+  {
+    "name": "DACAR",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.652
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "DACAR"
+  },
+  {
+    "name": "DEMON",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.134
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "DEMON"
+  },
+  {
+    "name": "DIESELBOY",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.09
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "DIESELBOY"
+  },
+  {
+    "name": "FORMUL8R",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.058
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "FORMUL8R"
+  },
+  {
+    "name": "HELLFIRE",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.044
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "HELLFIRE"
+  },
+  {
+    "name": "HOLLOWBACK",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.058
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "HOLLOWBACK"
+  },
+  {
+    "name": "JACKHAMMER",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.1
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "JACKHAMMER"
+  },
+  {
+    "name": "MIDDRIFT",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.225
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "MIDDRIFT"
+  },
+  {
+    "name": "MSTSUZUKA",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.383
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "MSTSUZUKA"
+  },
+  {
+    "name": "MUSCLETONE",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.132
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "MUSCLETONE"
+  },
+  {
+    "name": "NITRODOORSLAMMER",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.008
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "NITRODOORSLAMMER"
+  },
+  {
+    "name": "OFFTRACK",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.22
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "OFFTRACK"
+  },
+  {
+    "name": "PHANTOMRACER",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.149
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "PHANTOMRACER"
+  },
+  {
+    "name": "POWERBOMB",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.053
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "POWERBOMB"
+  },
+  {
+    "name": "ROCKSTER",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.844
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "ROCKSTER"
+  },
+  {
+    "name": "SHADOWMK2",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.014
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SHADOWMK2"
+  },
+  {
+    "name": "SK2BATTLESPEC",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.064
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SK2BATTLESPEC"
+  },
+  {
+    "name": "SOOOFAST",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.124
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SOOOFAST"
+  },
+  {
+    "name": "SPECTYTE",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.352
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SPECTYTE"
+  },
+  {
+    "name": "SPEEDBUMP",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.271
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SPEEDBUMP"
+  },
+  {
+    "name": "SPINEBUSTER",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      0.067
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SPINEBUSTER"
+  },
+  {
+    "name": "SUPERTSUNAMI",
+    "mover_type": "GSRACECAR",
+    "mass": 299.0,
+    "inertia": [
+      1500.0,
+      1800.0,
+      1200.0
+    ],
+    "center_of_mass": [
+      0.0,
+      -0.04
+    ],
+    "braking": 0.7,
+    "relative_speed": 0.5,
+    "final_ratio": 4.44,
+    "gears": [
+      1.27,
+      "CONTROLLER",
+      "AUTO",
+      "CHANGE-DOWN-TIME",
+      5.0,
+      "CHANGE-UP-TIME"
+    ],
+    "key": "SUPERTSUNAMI"
+  }
+]
