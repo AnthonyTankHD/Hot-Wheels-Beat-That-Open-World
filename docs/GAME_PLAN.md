@@ -1064,6 +1064,114 @@ attic2, minigolf2/5, bedroom16 + `probe_*.gd`, `find_*.py`,
   course is very bumpy elsewhere (the car can fall off the flat
   area into holes — the fall respawn catches it).
 
+## Fresh port of the 4 original maps — truly fresh, optimized (2026-11-17)
+
+Anthony: "Take it out and port it back in to keep it more optimized and
+make it as a Truly Fresh Port of the Map." So the 4 zone `.bin` files
+were removed and re-ported from scratch from the original
+`ZONE<NNNN>A.ARC` files in `workspace/hot-wheels-beat-that/trackdig/`
+with the same `tools/arcbank-v5/zone_to_gltf.py` converter — a clean
+re-do, not a patch on the old files. Backups of the 4 working `.bin`
+files are in `workspace/hot-wheels-beat-that/freshport/backup-original/`
+(md5s: zone1000 `aa6bc133…`, zone2000 `15f6782c…`, zone3000
+`73091a81…`, zone4000 `f216ddab…`). No landblock was rotated: the
+-90° X rotation on ENVIRONMENT nodes is part of the correct
+game→glTF conversion and was left alone. The city was not touched.
+Spawns, cameras, stuck reset, fall respawn, camera-roll fix: all
+untouched, coordinates unchanged (1:1 scale kept).
+
+**Proof the fresh port reproduces the old files:** re-running the
+converter on the 4 ARCs produced byte-identical output for
+zone1000/2000/3000 (same md5s as the live files). zone4000 differed
+in exactly 12 bytes — the 12 Mini Golf plate vertices raised +6 Y by
+`playtestfix/raise_beam.py` — and nothing else. So the port is a true
+re-do of the same source, and the old files carried no hidden edits.
+
+**Optimizations** (new tool `freshport/optimize_glb.py`; stats via
+`freshport/glb_stats.py`): (1) dropped images/textures no material
+references — the converter embeds every texture in the ARC, but only
+about half are ever used (zone1000 75 of 157, zone2000 69 of 138,
+zone3000 38 of 67, zone4000 28 of 72); 35.96 MB of dead PNGs removed.
+(2) dropped TEXCOORD_1 (4.34 MB; no material uses uv2). (3) deduped
+vertices per vertex buffer on the full tuple
+(POSITION+NORMAL+COLOR_0+TEXCOORD_0) — only a small win, because the
+source data splits vertices at hard edges and UV seams (a zone1000
+vertex buffer with 65,536 verts has only 28,922 unique positions but
+64,103 unique full tuples). COLOR_0 was kept (vertex colors are
+heavily used, up to 100% non-white). PNG re-encoding was tested and
+REJECTED: Pillow re-encode came out 124–127% of the converter's
+hand-rolled PNGs. No requantization, no rescaling, no rotation —
+geometry values are reused bit-for-bit.
+
+**Before → after (zone `.bin` files):**
+
+| zone | file size | vertices | triangles | images |
+|---|---|---|---|---|
+| Attic 1000 | 36,315,032 → 23,619,016 (−35%) | 252,597 → 232,507 | 176,463 → 176,463 | 157 → 75 |
+| Bedroom 2000 | 35,452,728 → 19,464,032 (−45%) | 267,388 → 233,824 | 192,847 → 192,847 | 138 → 69 |
+| Bowling 3000 | 17,747,012 → 13,682,484 (−23%) | 198,394 → 191,205 | 158,610 → 158,634 (+24 baked) | 67 → 38 |
+| Mini Golf 4000 | 23,495,936 → 12,913,484 (−45%) | 180,154 → 157,973 | 120,071 → 120,071 | 72 → 28 |
+| **Total** | **113,010,708 → 69,679,016 (−38%, −43.3 MB)** | **898,533 → 815,509** | **647,991 → 648,015** | **434 → 210** |
+
+**Zone load time** (time to first frame with the zone fully loaded,
+Xvfb + llvmpipe, same probe before/after — `freshport/load_probe.gd`):
+Attic 3,948 → 2,789 ms (−29%), Bedroom 3,777 → 2,613 ms (−31%),
+Bowling 2,184 → 2,061 ms (−6%), Mini Golf 2,530 → 2,133 ms (−16%).
+Bowling gains least: its file was already the smallest, and the two
+baked boxes add 2 trimesh shapes (299 → 301).
+
+**Known defects baked into the ported files (runtime patches REMOVED
+from `scripts/zone.gd`):** the Bowling lane and north floor are
+genuinely absent from the source — `ZONE3000P.ARC` (the physics file)
+holds only 3 entries and no mesh data at all, and lane-band vertices
+stop at x=-220 in every position pool of `ZONE3000A.ARC`. So
+equivalent geometry was baked into `zone3000.bin` as real glTF meshes
+with the exact dimensions of the old runtime patches: `BakedLanePatch`
+(x −225..330, z −152..−112, top y=184.35, red-orange) and
+`BakedNorthFloor` (x −225..350, z −110..64, top y=215, dark slate).
+The Mini Golf gate plate +6 Y raise was re-applied to the fresh
+`zone4000.bin` (same 12 vertices, Y-range asserted first). No runtime
+patches remain in `zone.gd` — `_build_lane_patch()` and
+`_build_north_floor_patch()` are deleted; the file carries a comment
+that the bakes must be re-applied if the `.bin` files are ever
+re-ported from scratch. The baked boxes get trimesh collision
+automatically from `_build_zone()` like every other mesh.
+
+**Verification:** a world-space triangle-soup comparison
+(`freshport/verify_glb.py`) proves the optimized files carry the same
+geometry: zone1000/2000/4000 show ZERO differing triangles vs the old
+files; zone3000 shows exactly the 24 new baked-box triangles and zero
+lost. Rendered drives of all 5 maps (Bone Shaker, `freshport/vrf/`,
+`fp-*.png`): Attic spawn shot is pixel-identical to the old build's
+verification shot (same sha256); Bedroom car stayed on the bed the
+whole run (min_y 803.6 constant); Bowling car drove the FULL lane east
+upright — spawn (−257, 184.7, −132) → mid-drive (138, 184.8, −132)
+at speed 29, min_y 184.3 never dropped, past the old hole; Mini Golf
+plate still high in frame with a clear roofline, car drove under it to
+x=−40 at 22.3 u/s (same as the old verification); city untouched and
+driving fine (stuck reset still fires). All 19 scripts `--check-only`
+clean; 0 script errors across all 5 runs. The exported `.pck` was run
+directly: Bowling prints `trimesh collision on 301 meshes` with no
+patch lines, and a string check confirms `BakedLanePatch` /
+`BakedNorthFloor` are in the `.pck` while dropped texture names
+(e.g. `0ref2.png`, `BiologyHandbook.png`) are absent.
+- **Fresh-maps build (2026-11-17):**
+  `hot-wheels-beat-that-fresh-maps-build.zip` (251,712,861 bytes, md5
+  `4d3289ac48ef6d6e4f094ed47d2f52ab`), also at the standard
+  `hot-wheels-beat-that-prototype-windows.zip` path (identical file,
+  same md5). Windows EXE (84 MB) + pck (247,294,816 bytes, down from
+  290,626,928). **Still open:** score TVs still occlude the car
+  briefly while driving Bowling (mid-drive shot caught the car behind
+  a TV — the known open question, Anthony hasn't answered
+  raise-vs-leave); minimaps weak except Bowling; Mini Golf bumpy off
+  the flat strip (one fall + respawn in the VM probe, same as before —
+  the known ~3 fps physics-tunneling artifact); black cars dark from
+  dead behind; Bedroom spiky black silhouette on the right horizon
+  (unidentified, pre-existing). **Follow-up (not done):** push the
+  fresh zone `.bin` files + `zone.gd` to GitHub — needs Anthony's
+  go-ahead; the v0.1-assets Release files (zone1000/zone2000) are now
+  stale vs the fresh port.
+
 ## Repo layout
 
 - `src/` — game source code

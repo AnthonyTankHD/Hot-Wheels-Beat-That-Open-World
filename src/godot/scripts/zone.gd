@@ -41,8 +41,6 @@ func _ready() -> void:
 	# direction, camera already behind it.
 	_place_at_spawn()
 	_build_zone()
-	_build_lane_patch()
-	_build_north_floor_patch()
 	_build_walls()
 	_build_hud(car_data)
 	_build_pause_menu()
@@ -78,8 +76,8 @@ func _apply_cam_distance() -> void:
 # the low default chase cam made the furniture read as hanging from
 # the ceiling; the camera is raised above the room floor (height 38,
 # distance 28, pitch -26) so the floor reads as a floor and the
-# furniture sits on it (with the north-floor patch filling the
-# missing north floor). The other zones keep the defaults (height 2,
+# furniture sits on it (with the baked-in north floor in zone3000.bin
+# filling the missing north floor). The other zones keep the defaults (height 2,
 # pitch 0) — they already read level. The base values are stored on
 # the cam holder so a camera switch keeps the zone's setup instead
 # of resetting to the 8.0 / level defaults. Known trade-off: the
@@ -210,81 +208,16 @@ func _build_zone() -> void:
 			stack.append(child)
 	print("[Zone] ", zone_name, ": trimesh collision on ", count, " meshes")
 
-# Bowling Alley lane patch (2026-11-16): the converted zone3000
-# geometry is MISSING the lane surface east of x≈-221 — no lane
-# triangles and no collision there (verified by raycast grid and by
-# the mesh data: lane-band verts stop at x=-220). The car drives
-# east off the end of the real lane, falls through the hole, and
-# flips onto its side against the north blue/cosmic wall (reproduced
-# in the VM and on Anthony's Deck, video frame 15). The spawn move
-# alone could not fix it — the hole is 36 units east of the spawn.
-# Patch it with a red lane strip at the real lane level (top
-# y=184.35, 0.05 above the real lane so it renders cleanly over the
-# 4-unit overlap) running the full lane to the pins (x=330, where
-# the real lane resumes at y≈185). Visual + collision together, so
-# the car visibly drives on red, not on air over the pit.
-func _build_lane_patch() -> void:
-	if zone_name != "Bowling Alley":
-		return
-	var body := StaticBody3D.new()
-	body.name = "LanePatch"
-	body.position = Vector3(52.5, 183.35, -132)
-	var mesh := MeshInstance3D.new()
-	var box := BoxMesh.new()
-	box.size = Vector3(555, 2, 40)
-	mesh.mesh = box
-	mesh.material_override = _mat(Color(0.85, 0.20, 0.08))
-	body.add_child(mesh)
-	var col := CollisionShape3D.new()
-	var shape := BoxShape3D.new()
-	shape.size = Vector3(555, 2, 40)
-	col.shape = shape
-	body.add_child(col)
-	add_child(body)
-	print("[Zone] Bowling Alley: lane patch added (x -225..330, top y=184.35)")
-
-# North-floor patch (Bowling Alley only). Same loss class as the
-# lane hole, found 2026-11-16 round 2: north of the lane the room
-# has NO floor at all in the converted geometry. Godot raycast
-# (the car drives on this collision) finds void from z=-110 to the
-# north wall (z=+64) for almost every x east of -200, and a
-# triangle-area count over the converted zone3000.bin finds only
-# ~1,068 sq units of horizontal surface in the whole north band
-# (scattered furniture tops) vs ~16,753 in the south band (a real
-# floor) and ~11,267 in the lane band. The GLB holds all 145 meshes
-# the original .ARC has, so the floor was never in the source data
-# — the ball-return consoles, score-TV poles, snack table and
-# seating were authored standing on legs over an open pit, and the
-# original game's high camera never showed it. From the low chase
-# cam the furniture reads as hanging from the ceiling (Anthony's
-# annotation, 2026-11-16): the sightline to a console base passes
-# through the sunken channel's wall (top y=215) so the base is
-# occluded and the furniture floats against the sky. Patch it with
-# a floor slab at the south floor's level (top y=215) spanning the
-# void band, so the furniture stands ON a visible floor. Visual +
-# collision together; the car can never reach it (29 units above
-# the lane, no ramp), and the furniture legs sink into it exactly
-# the way legs meet a floor.
-func _build_north_floor_patch() -> void:
-	if zone_name != "Bowling Alley":
-		return
-	var body := StaticBody3D.new()
-	body.name = "NorthFloorPatch"
-	body.position = Vector3(62.5, 214.0, -23)
-	var mesh := MeshInstance3D.new()
-	var box := BoxMesh.new()
-	box.size = Vector3(575, 2, 174)
-	mesh.mesh = box
-	mesh.material_override = _mat(Color(0.15, 0.17, 0.26))
-	body.add_child(mesh)
-	var col := CollisionShape3D.new()
-	var shape := BoxShape3D.new()
-	shape.size = Vector3(575, 2, 174)
-	col.shape = shape
-	body.add_child(col)
-	add_child(body)
-	print("[Zone] Bowling Alley: north floor patch added (x -225..350, z -110..64, top y=215)")
-
+# Bowling lane + north floor (2026-11-17 fresh port): the lane surface
+# east of x=-221 and the north floor (z -110..64) were missing from the
+# original ZONE3000A.ARC — the physics file ZONE3000P.ARC holds no mesh
+# data at all, so the geometry was never in the source. Both are now
+# BAKED INTO the fresh-ported zone3000.bin as real glTF meshes
+# (BakedLanePatch: x -225..330, z -152..-112, top y=184.35;
+# BakedNorthFloor: x -225..350, z -110..64, top y=215), same dimensions
+# as the old runtime patches, which are removed. The Mini Golf gate
+# plate +6 Y raise is likewise baked into zone4000.bin. If the .bin
+# files are ever re-ported from scratch, these bakes must be re-applied.
 func _mat(color: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.albedo_color = color
