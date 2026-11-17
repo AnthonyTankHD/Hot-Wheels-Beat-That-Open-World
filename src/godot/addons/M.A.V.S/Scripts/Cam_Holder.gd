@@ -17,6 +17,12 @@ extends Node3D
 # back far enough to see the whole car with room around it.
 
 var current_cam : int = 0 # Current camera position
+# Zone chase-cam base values, set by zone.gd per zone (Bowling raises
+# the cam and pitches it down so the sunken lane's room floor reads
+# as a floor). switch_camera() uses these instead of the hardcoded
+# 8.0 / 0.0 defaults so a camera switch keeps the zone's setup.
+var base_pitch_deg: float = 0.0
+var base_spring_length: float = 8.0
 var cam_rot_x : float = 0.0 # Rotation in X axis applied by gamepad
 var cam_rot_y : float = 0.0 # Rotation in Y axis applied by gamepad
 var cam_current_x : float = 0.0 # Smoothing and actuall rotation for orbital camera X
@@ -133,8 +139,8 @@ func switch_camera():
 		0:
 			cam_position.rotation_degrees.x = 0.0 # We set rotation for our camera target to keep it default, this cant be global or it will take parent rotation and add it up
 			camera.reparent(cam_arm) # We reparent camera back to spring arm
-			cam_arm.spring_length = 8.0 # Chase cam sits 8m back so the whole car is visible
-			camera.rotation_degrees.x = 0.0 # We reset camera angle for each axis just in case
+			cam_arm.spring_length = base_spring_length # Chase cam sits back so the whole car is visible (zone base length)
+			camera.rotation_degrees.x = base_pitch_deg # Zone chase-cam pitch (Bowling looks down); 0 = level
 			camera.rotation_degrees.y = 0.0
 			camera.rotation_degrees.z = 0.0
 			if cam_parent.get_parent().is_truck: # Updates camer for trucks types to be consisten
@@ -143,7 +149,7 @@ func switch_camera():
 			
 		1:
 			cam_position.rotation_degrees.x = 7.5 # Same here we tilt camera position to be a bit lower and closer
-			cam_arm.spring_length = 8.0 # Chase cam sits 8m back so the whole car is visible
+			cam_arm.spring_length = base_spring_length # Chase cam sits back so the whole car is visible (zone base length)
 			if cam_parent.get_parent().is_truck: # Updates camer for trucks types to be consisten
 				self.position = Vector3(0, 2.0, 0)
 				self.get_child(0).rotation_degrees.x = -15
