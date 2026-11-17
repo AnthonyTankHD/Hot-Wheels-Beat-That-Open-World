@@ -26,6 +26,7 @@ Playable prototype: 64 cars (30 original Beat That cars, 33 Highway 35 cars, Iri
 - **City** — built by `src/godot/scripts/city.gd`, scene in `src/godot/scenes/main.tscn`
 - **Menus** — `src/godot/scenes/` (start menu, map select, car select) + `src/godot/scripts/ui_theme.gd` (the shared look)
 - **Docs** — `docs/GAME_PLAN.md` (what's built, what's next), `docs/REVERSE_ENGINEERING.md` (how the original game files were decoded)
+- **AI help in the editor:** `src/godot/addons/little_helper/` — Little Helper (MIT), an in-editor AI chat dock. Paste your API key in its settings (stored on your machine only, never in the repo).
 
 ## Setup
 
