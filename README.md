@@ -18,6 +18,15 @@ This is a separate project from the Hot Wheels Hunt Book Android app — but the
 
 Playable prototype: 64 cars (30 original Beat That cars, 33 Highway 35 cars, Iridium), a drivable city plus the 4 original zones (Attic, Bedroom, Bowling Alley, Mini Golf). See docs/GAME_PLAN.md for the full plan.
 
+## Where to find things
+
+- **Cars** — models in `src/godot/models/` (one `.glb` per car), roster in `src/godot/data/cars.gd`, picker in `src/godot/scripts/car_select.gd`
+- **Driving physics** — `src/godot/addons/M.A.V.S/` (the M.A.V.S. vehicle system) + `src/godot/scripts/mavs_car.gd` (our setup that wires the real car models into it)
+- **Maps** — the 4 original zones in `src/godot/models/zones/`, loaded by `src/godot/scripts/zone.gd`
+- **City** — built by `src/godot/scripts/city.gd`, scene in `src/godot/scenes/main.tscn`
+- **Menus** — `src/godot/scenes/` (start menu, map select, car select) + `src/godot/scripts/ui_theme.gd` (the shared look)
+- **Docs** — `docs/GAME_PLAN.md` (what's built, what's next), `docs/REVERSE_ENGINEERING.md` (how the original game files were decoded)
+
 ## Setup
 
 Open `src/godot/project.godot` in Godot 4.3. First open imports the project (64 cars, 4 zones) — give it a few minutes.
