@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://zonebedroom2000"]
+
+[ext_resource type="Script" path="res://scripts/mavs_car.gd" id="1_mavs"]
+[ext_resource type="Script" path="res://scripts/zone.gd" id="2_zone"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat_zone"]
+sky_top_color = Color(0.25, 0.45, 0.8, 1)
+sky_horizon_color = Color(0.65, 0.78, 0.95, 1)
+ground_bottom_color = Color(0.3, 0.25, 0.2, 1)
+ground_horizon_color = Color(0.6, 0.55, 0.5, 1)
+
+[sub_resource type="Sky" id="Sky_zone"]
+sky_material = SubResource("SkyMat_zone")
+
+[sub_resource type="Environment" id="Environment_zone"]
+background_mode = 2
+background_color = Color(0.35, 0.55, 0.85, 1)
+sky = SubResource("Sky_zone")
+ambient_light_source = 2
+ambient_light_color = Color(0.5, 0.55, 0.65, 1)
+ambient_light_energy = 1.0
+
+[node name="Bedroom" type="Node3D"]
+script = ExtResource("2_zone")
+zone_glb = "res://models/zones/zone2000.bin"
+zone_name = "Bedroom"
+spawn = Vector3(448, 805.6, -150)
+spawn_yaw = 45.0
+wall_min = Vector2(48, -250)
+wall_max = Vector2(773, 183)
+floor_y = 744.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_zone")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.5, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 20, 0)
+light_energy = 0.8
+light_color = Color(0.996, 0.918, 0.796, 1)
+shadow_enabled = false
+
+[node name="Car" type="VehicleBody3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 448, 805.6, -150)
+script = ExtResource("1_mavs")
