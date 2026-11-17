@@ -24,13 +24,11 @@ Open `src/godot/project.godot` in Godot 4.3. First open imports the project (64 
 
 ## Large files (download from the Release)
 
-Three files are too big for normal repo uploads, so they live on the [v0.1-assets release](https://github.com/AnthonyTankHD/Hot-Wheels-Beat-That-Open-World/releases/tag/v0.1-assets) — download them and drop them in:
+One file is too big for normal repo uploads, so it lives on the [v0.1-assets release](https://github.com/AnthonyTankHD/Hot-Wheels-Beat-That-Open-World/releases/tag/v0.1-assets) — download it and drop it in:
 
-- `src/godot/models/zones/zone1000.bin` — Attic landblock
-- `src/godot/models/zones/zone2000.bin` — Bedroom landblock
 - `src/godot/models/iridium.glb` — Iridium (Hot Wheels Unleashed 2)
 
-Godot picks them up on first open. Without them, the Attic and Bedroom zones load empty and Iridium is missing from the car list.
+The zone bins (`src/godot/models/zones/zone1000.bin`–`zone4000.bin`) are in the repo tree now — the fresh-ported maps (2026-11-17) are under 25 MB each. Fresh copies are also kept on the release as a fallback. Godot picks them up on first open. Without iridium.glb, Iridium is missing from the car list.
 
 ## Project layout
 
