@@ -1,6 +1,6 @@
 extends Control
 # Hot Wheels Beat That — Open World City
-# Car selection screen: pick any of the 30 real Beat That cars.
+# Car selection screen: pick any of the 64 cars.
 # Left side shows a live 3D preview of the highlighted car (the real
 # .glb model, slowly turning); right side is the grid of all cars.
 # Keyboard: arrows to move, Enter to pick. Gamepad: D-pad / stick
