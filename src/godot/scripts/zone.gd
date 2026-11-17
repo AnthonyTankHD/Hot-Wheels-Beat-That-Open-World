@@ -18,6 +18,8 @@ extends Node3D
 @export var spawn: Vector3 = Vector3(0, 1, 0)
 @export var spawn_yaw: float = 0.0 # degrees; car faces +Z at 0, +X at 90
 @export var cam_distance: float = 0.0 # 0 = M.A.V.S. default (8 + body len); else chase-cam spring length
+@export var cam_height: float = 2.0 # chase-cam holder height above car origin (2.0 = M.A.V.S. default)
+@export var cam_pitch: float = 0.0 # chase-cam pitch in degrees; negative = look down; 0 = level
 @export var wall_min: Vector2 = Vector2(-700, -500)
 @export var wall_max: Vector2 = Vector2(750, 300)
 @export var floor_y: float = -300.0
@@ -40,11 +42,12 @@ func _ready() -> void:
 	_place_at_spawn()
 	_build_zone()
 	_build_lane_patch()
+	_build_north_floor_patch()
 	_build_walls()
 	_build_hud(car_data)
 	_build_pause_menu()
 	_car.apply_settings()
-	_apply_cam_distance()
+	_apply_zone_cam()
 
 # Put the car on the spawn point, facing the spawn direction, with
 # the chase camera already behind it (so the first frame is framed
@@ -68,6 +71,35 @@ func _apply_cam_distance() -> void:
 	if arm != null:
 		arm.spring_length = cam_distance
 
+# Per-zone chase camera: height + pitch + distance, applied after
+# apply_settings() (which resets the spring length from the body
+# length) and again after a pause-menu car swap. Bowling's lane sits
+# in a sunken channel with the room floor 31-42 units above it, so
+# the low default chase cam made the furniture read as hanging from
+# the ceiling; the camera is raised above the room floor (height 38,
+# distance 28, pitch -26) so the floor reads as a floor and the
+# furniture sits on it (with the north-floor patch filling the
+# missing north floor). The other zones keep the defaults (height 2,
+# pitch 0) — they already read level. The base values are stored on
+# the cam holder so a camera switch keeps the zone's setup instead
+# of resetting to the 8.0 / level defaults. Known trade-off: the
+# hanging score TVs (y ~195-232) sit in the camera's line of sight,
+# so the car ducks behind one briefly (~1 s) when passing each TV;
+# that is original geometry, and raising the TVs is a separate call.
+func _apply_zone_cam() -> void:
+	_apply_cam_distance()
+	var holder: Node = _car.get_node_or_null("Camera_Anchor/Cam_Holder")
+	if holder == null:
+		return
+	holder.position = Vector3(0, cam_height, 0)
+	holder.set("base_pitch_deg", cam_pitch)
+	var arm: SpringArm3D = holder.get("cam_arm")
+	if arm != null:
+		holder.set("base_spring_length", arm.spring_length)
+	var cam: Camera3D = holder.get("camera")
+	if cam != null:
+		cam.rotation_degrees.x = cam_pitch
+
 func _build_pause_menu() -> void:
 	_pause_menu = PauseMenu.new()
 	add_child(_pause_menu)
@@ -85,7 +117,7 @@ func _apply_selected_car() -> void:
 	var car_data: Dictionary = CarData.selected()
 	_car.apply_car(car_data)
 	_car.apply_settings()
-	_apply_cam_distance()
+	_apply_zone_cam()
 	if _name_label != null:
 		_name_label.text = "%s — %s" % [zone_name, car_data["name"]]
 
@@ -210,6 +242,48 @@ func _build_lane_patch() -> void:
 	body.add_child(col)
 	add_child(body)
 	print("[Zone] Bowling Alley: lane patch added (x -225..330, top y=184.35)")
+
+# North-floor patch (Bowling Alley only). Same loss class as the
+# lane hole, found 2026-11-16 round 2: north of the lane the room
+# has NO floor at all in the converted geometry. Godot raycast
+# (the car drives on this collision) finds void from z=-110 to the
+# north wall (z=+64) for almost every x east of -200, and a
+# triangle-area count over the converted zone3000.bin finds only
+# ~1,068 sq units of horizontal surface in the whole north band
+# (scattered furniture tops) vs ~16,753 in the south band (a real
+# floor) and ~11,267 in the lane band. The GLB holds all 145 meshes
+# the original .ARC has, so the floor was never in the source data
+# — the ball-return consoles, score-TV poles, snack table and
+# seating were authored standing on legs over an open pit, and the
+# original game's high camera never showed it. From the low chase
+# cam the furniture reads as hanging from the ceiling (Anthony's
+# annotation, 2026-11-16): the sightline to a console base passes
+# through the sunken channel's wall (top y=215) so the base is
+# occluded and the furniture floats against the sky. Patch it with
+# a floor slab at the south floor's level (top y=215) spanning the
+# void band, so the furniture stands ON a visible floor. Visual +
+# collision together; the car can never reach it (29 units above
+# the lane, no ramp), and the furniture legs sink into it exactly
+# the way legs meet a floor.
+func _build_north_floor_patch() -> void:
+	if zone_name != "Bowling Alley":
+		return
+	var body := StaticBody3D.new()
+	body.name = "NorthFloorPatch"
+	body.position = Vector3(62.5, 214.0, -23)
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(575, 2, 174)
+	mesh.mesh = box
+	mesh.material_override = _mat(Color(0.15, 0.17, 0.26))
+	body.add_child(mesh)
+	var col := CollisionShape3D.new()
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(575, 2, 174)
+	col.shape = shape
+	body.add_child(col)
+	add_child(body)
+	print("[Zone] Bowling Alley: north floor patch added (x -225..350, z -110..64, top y=215)")
 
 func _mat(color: Color) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
