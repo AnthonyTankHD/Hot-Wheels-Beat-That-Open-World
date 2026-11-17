@@ -118,7 +118,7 @@ Nitro={
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/M.A.V.S/plugin.cfg")
+enabled=PackedStringArray("res://addons/M.A.V.S/plugin.cfg", "res://addons/little_helper/plugin.cfg")
 
 [physics]
 
