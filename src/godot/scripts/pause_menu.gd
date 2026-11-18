@@ -4,6 +4,12 @@ extends CanvasLayer
 # main (Resume / Settings / Change Car / Quit to Menu), settings
 # (the shared SettingsPanel — same UI as the standalone settings
 # screen, with a real scrollbar), and the in-pause car list.
+# Hot Wheels theme (2026-11-17): the flame logo on a bright-blue
+# header band stays on top of all three panels, and every button
+# gets a gold focus/hover ring so the selection is obvious on the
+# Deck. The navy panel itself is unchanged on purpose — the settings
+# panel's white labels would wash out on the blister-card art, which
+# fades to white at the bottom.
 # process_mode is ALWAYS so it keeps working while the tree is paused.
 # Esc / Back toggles it; the driving scene opens it, this menu closes it.
 # Quit to Menu now returns to the START MENU (was: car select).
@@ -73,28 +79,42 @@ func _build_ui() -> void:
 	panel.add_theme_stylebox_override("panel", UiTheme.panel_style())
 	center.add_child(panel)
 
+	# One outer column: the Hot Wheels header band stays on top no
+	# matter which of the three panels is showing (main / settings /
+	# car list), so the whole menu reads as one Hot Wheels card.
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 10)
+	panel.add_child(outer)
+
+	# --- Hot Wheels header: the flame logo on a bright-blue band ---
+	outer.add_child(_make_header_band())
+
 	# --- Main panel ---
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 10)
-	panel.add_child(vbox)
+	outer.add_child(vbox)
 	_main_vbox = vbox
 
 	vbox.add_child(UiTheme.title_label("PAUSED", 40))
 
 	_resume_button = UiTheme.make_button("RESUME", UiTheme.ORANGE, Vector2(420, 46), 20)
 	_resume_button.pressed.connect(resume)
+	_add_gold_ring(_resume_button)
 	vbox.add_child(_resume_button)
 
 	var settings_btn := UiTheme.make_button("SETTINGS", UiTheme.BLUE_BTN, Vector2(420, 46), 20)
 	settings_btn.pressed.connect(_show_settings_panel)
+	_add_gold_ring(settings_btn)
 	vbox.add_child(settings_btn)
 
 	var change_btn := UiTheme.make_button("CHANGE CAR", UiTheme.BLUE_BTN, Vector2(420, 46), 20)
 	change_btn.pressed.connect(_show_car_list)
+	_add_gold_ring(change_btn)
 	vbox.add_child(change_btn)
 
 	var quit_btn := UiTheme.make_button("QUIT TO MENU", UiTheme.RED_BTN, Vector2(420, 46), 20)
 	quit_btn.pressed.connect(_go_to_main_menu)
+	_add_gold_ring(quit_btn)
 	vbox.add_child(quit_btn)
 
 	# --- Settings panel (shared SettingsPanel, scrolls) ---
@@ -102,7 +122,7 @@ func _build_ui() -> void:
 	settings_vbox.add_theme_constant_override("separation", 10)
 	settings_vbox.visible = false
 	settings_vbox.custom_minimum_size = Vector2(600, 560)
-	panel.add_child(settings_vbox)
+	outer.add_child(settings_vbox)
 	_settings_vbox = settings_vbox
 
 	settings_vbox.add_child(UiTheme.title_label("SETTINGS", 32))
@@ -115,13 +135,14 @@ func _build_ui() -> void:
 	settings_vbox.add_child(settings_back_row)
 	var settings_back := UiTheme.make_button("BACK", UiTheme.GREY_BTN, Vector2(200, 46), 18)
 	settings_back.pressed.connect(_show_main_panel)
+	_add_gold_ring(settings_back)
 	settings_back_row.add_child(settings_back)
 
 	# --- In-pause car list (hidden until CHANGE CAR is pressed) ---
 	var car_vbox := VBoxContainer.new()
 	car_vbox.add_theme_constant_override("separation", 10)
 	car_vbox.visible = false
-	panel.add_child(car_vbox)
+	outer.add_child(car_vbox)
 	_car_list_vbox = car_vbox
 
 	car_vbox.add_child(UiTheme.title_label("PICK A CAR", 32))
@@ -152,6 +173,7 @@ func _build_ui() -> void:
 		b.add_theme_stylebox_override("focus", UiTheme.button_stylebox(car_color, "hover"))
 		b.add_theme_color_override("font_color", Color.WHITE)
 		b.pressed.connect(_pick_car.bind(String(car["key"])))
+		_add_gold_ring(b)
 		car_grid.add_child(b)
 
 	var back_row := HBoxContainer.new()
@@ -159,7 +181,60 @@ func _build_ui() -> void:
 	car_vbox.add_child(back_row)
 	var back_btn := UiTheme.make_button("BACK", UiTheme.GREY_BTN, Vector2(200, 46), 18)
 	back_btn.pressed.connect(_show_main_panel)
+	_add_gold_ring(back_btn)
 	back_row.add_child(back_btn)
+
+# Hot Wheels header band: the flame logo on bright Hot Wheels blue.
+# The logo PNG (res://data/hub/hot-wheels-logo.png) has a transparent
+# background, so the blue band shows around it like the top of a
+# blister-pack card. Kept separate from the card-bg image on purpose:
+# the card art fades to white at the bottom, which would wash out the
+# settings panel's white labels — the navy panel stays readable.
+func _make_header_band() -> PanelContainer:
+	var band := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.0, 0.5, 1.0)
+	sb.set_corner_radius_all(10)
+	sb.content_margin_left = 12
+	sb.content_margin_right = 12
+	sb.content_margin_top = 8
+	sb.content_margin_bottom = 8
+	band.add_theme_stylebox_override("panel", sb)
+	var center := CenterContainer.new()
+	band.add_child(center)
+	var logo := TextureRect.new()
+	logo.texture = load("res://data/hub/hot-wheels-logo.png")
+	logo.custom_minimum_size = Vector2(300, 70)
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.add_child(logo)
+	return band
+
+# Gold ring around a button while it has keyboard/gamepad focus or
+# the mouse is over it — the selected item is obvious at a glance on
+# the Deck. Same pattern as the car-select cards.
+func _add_gold_ring(btn: Button) -> void:
+	var ring := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0)
+	sb.border_color = UiTheme.GOLD
+	sb.set_border_width_all(4)
+	sb.set_corner_radius_all(12)
+	ring.add_theme_stylebox_override("panel", sb)
+	ring.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ring.visible = false
+	btn.add_child(ring)
+	var state := {"focused": false, "hovered": false, "ring": ring}
+	btn.focus_entered.connect(_on_btn_highlight.bind(state, true, "focused"))
+	btn.focus_exited.connect(_on_btn_highlight.bind(state, false, "focused"))
+	btn.mouse_entered.connect(_on_btn_highlight.bind(state, true, "hovered"))
+	btn.mouse_exited.connect(_on_btn_highlight.bind(state, false, "hovered"))
+
+func _on_btn_highlight(state: Dictionary, on: bool, which: String) -> void:
+	state[which] = on
+	(state["ring"] as Control).visible = bool(state["focused"]) or bool(state["hovered"])
 
 func _show_main_panel() -> void:
 	if _main_vbox != null:
