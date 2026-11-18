@@ -1,13 +1,24 @@
 extends Control
 # Hot Wheels Beat That — Open World City
-# Car selection screen: pick any of the 64 cars.
-# Left side shows a live 3D preview of the highlighted car (the real
-# .glb model, slowly turning); right side is the grid of all cars.
+# Car selection screen: pick any of the 72 cars.
+# Each car sits on a flat Hot Wheels blister-pack card (the card
+# art Anthony sent, res://data/car_card_bg.png — bright blue, flame
+# logo, track silhouette, "3+" bottom-left) — the car's real model
+# thumbnail, pre-rendered once into res://data/car_thumbs/<key>.png
+# by hub/td_thumbs.gd, sits in the middle of the art; the name and
+# Top/Accel stats sit on the card's light strip in dark navy, with
+# the car's roster color as a stripe along the bottom edge. Left
+# side keeps the live 3D turntable preview of the highlighted car.
+# Big readable cards, one scrollable grid.
 # Keyboard: arrows to move, Enter to pick. Gamepad: D-pad / stick
-# to move, A to pick. Mouse/touch: click a car (hover highlights it
-# in the preview).
+# to move, A to pick. Mouse/touch: click a card (hover highlights
+# it in the preview). The gold ring marks the focused/hovered card.
 
 const MavsCarScript := preload("res://scripts/mavs_car.gd")
+const CARD_ART := preload("res://data/car_card_bg.png")
+
+const CARD_W := 260.0
+const CARD_H := 394.0
 
 var _first_button: Button = null
 var _preview_key := ""
@@ -47,9 +58,9 @@ func _ready() -> void:
 	top_bar.add_child(spacer)
 
 	vbox.add_child(UiTheme.body_label("PICK YOUR CAR  —  %d CARS  —  OPEN CITY" % CarData.CARS.size(), 20, UiTheme.ORANGE))
-	vbox.add_child(UiTheme.body_label("Click / tap a car to drive it, or use arrows + Enter (gamepad: D-pad + A)", 15, UiTheme.TEXT_DIM))
+	vbox.add_child(UiTheme.body_label("Click / tap a card to drive it, or use arrows + Enter (gamepad: D-pad + A)", 15, UiTheme.TEXT_DIM))
 
-	# --- Preview (left) + car grid (right) ---
+	# --- Preview (left) + card grid (right) ---
 	var hbox := HBoxContainer.new()
 	hbox.add_theme_constant_override("separation", 16)
 	hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -85,7 +96,7 @@ func _ready() -> void:
 	_preview_stats.add_theme_color_override("font_color", Color(0.85, 0.9, 1.0))
 	preview_vbox.add_child(_preview_stats)
 
-	# --- Scrollable grid of cars ---
+	# --- Scrollable grid of blister-pack cards ---
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -100,12 +111,12 @@ func _ready() -> void:
 	scroll.add_child(grid)
 
 	for car in CarData.CARS:
-		var btn := _make_car_button(car)
+		var btn := _make_car_card(car)
 		grid.add_child(btn)
 		if _first_button == null:
 			_first_button = btn
 
-	# Focus the first car so keyboard/gamepad works immediately.
+	# Focus the first card so keyboard/gamepad works immediately.
 	if _first_button != null:
 		_first_button.grab_focus.call_deferred()
 
@@ -222,31 +233,118 @@ func _show_preview(key: String) -> void:
 			_preview_stats.text = "Top Speed %d   •   Accel %d" % [int(car["top_speed"]), int(car["accel"])]
 			break
 
-# ------------------------------------------------------------------ grid
+# ------------------------------------------------------------------ cards
 
-func _make_car_button(car: Dictionary) -> Button:
+# The blister-pack card: the Hot Wheels card art itself is the
+# button background (StyleBoxTexture, same stylebox for every
+# state). The art is 1354x2048 (aspect 0.661) and the card is
+# 260x394 (aspect 0.660), so it fills the card with no visible
+# distortion. The gold ring child marks focus/hover instead.
+func _card_stylebox() -> StyleBoxTexture:
+	var sb := StyleBoxTexture.new()
+	sb.texture = CARD_ART
+	return sb
+
+func _gold_ring() -> Panel:
+	var ring := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0)
+	sb.border_color = UiTheme.GOLD
+	sb.set_border_width_all(5)
+	sb.set_corner_radius_all(12)
+	ring.add_theme_stylebox_override("panel", sb)
+	ring.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ring.visible = false
+	return ring
+
+func _make_car_card(car: Dictionary) -> Button:
+	var key := String(car["key"])
 	var btn := Button.new()
-	btn.text = "%s\nTop %d  Accel %d" % [car["name"], int(car["top_speed"]), int(car["accel"])]
-	btn.custom_minimum_size = Vector2(250, 84)
+	btn.text = ""
+	btn.custom_minimum_size = Vector2(CARD_W, CARD_H)
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.add_theme_font_size_override("font_size", 20)
-	# Glossy metal in the car's own color, so the grid reads as a
-	# row of paint swatches with a consistent gold look.
-	var car_color: Color = car["color"]
-	btn.add_theme_stylebox_override("normal", UiTheme.button_stylebox(car_color, "normal"))
-	btn.add_theme_stylebox_override("hover", UiTheme.button_stylebox(car_color, "hover"))
-	btn.add_theme_stylebox_override("pressed", UiTheme.button_stylebox(car_color, "pressed"))
-	btn.add_theme_stylebox_override("focus", UiTheme.button_stylebox(car_color, "hover"))
-	btn.add_theme_stylebox_override("disabled", UiTheme.button_stylebox(car_color, "disabled"))
-	btn.add_theme_color_override("font_color", Color.WHITE)
-	btn.add_theme_color_override("font_hover_color", Color.WHITE)
-	btn.add_theme_color_override("font_focus_color", Color(1.0, 0.95, 0.7))
-	btn.pressed.connect(_on_car_picked.bind(car["key"]))
-	# Highlighting a car (keyboard focus or mouse hover) shows its
+	var card_sb := _card_stylebox()
+	btn.add_theme_stylebox_override("normal", card_sb)
+	btn.add_theme_stylebox_override("hover", card_sb)
+	btn.add_theme_stylebox_override("pressed", card_sb)
+	btn.add_theme_stylebox_override("focus", card_sb)
+	btn.add_theme_stylebox_override("disabled", card_sb)
+	btn.pressed.connect(_on_car_picked.bind(key))
+
+	# The car's real model (pre-rendered thumbnail). The thumbnail
+	# is transparent, so the card art shows around the car; the car
+	# itself sits in the middle band of the art, exactly where the
+	# blister bubble sits on a real card. The thumbnail is 256x384,
+	# the same aspect as the card, so it fills the card face.
+	var thumb := TextureRect.new()
+	var thumb_tex: Texture2D = load("res://data/car_thumbs/%s.png" % key.to_lower())
+	if thumb_tex != null:
+		thumb.texture = thumb_tex
+	# EXPAND_IGNORE_SIZE MUST come before setting size: a Control's
+	# size is clamped to its combined minimum size, and a
+	# TextureRect's minimum size is the texture's native 256x384
+	# unless expand is IGNORE_SIZE. Set size first and it sticks
+	# at 256x384 and runs over the name label below (verified
+	# rendered — that was the overlap bug).
+	thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	thumb.position = Vector2(0, 0)
+	thumb.size = Vector2(CARD_W, CARD_H)
+	thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	thumb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(thumb)
+
+	# Car name on the card's light strip, dark navy on white (the
+	# strip is the pale bottom of the card art, so gold text would
+	# wash out — the shipped flat build used dark navy here).
+	var name_label := Label.new()
+	name_label.text = String(car["name"])
+	name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_label.position = Vector2(8, 312)
+	name_label.size = Vector2(CARD_W - 16, 34)
+	name_label.add_theme_font_size_override("font_size", 20)
+	name_label.add_theme_color_override("font_color", Color(0.05, 0.12, 0.35))
+	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(name_label)
+
+	var stats_label := Label.new()
+	stats_label.text = "Top %d   •   Accel %d" % [int(car["top_speed"]), int(car["accel"])]
+	stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stats_label.position = Vector2(8, 344)
+	stats_label.size = Vector2(CARD_W - 16, 24)
+	stats_label.add_theme_font_size_override("font_size", 15)
+	stats_label.add_theme_color_override("font_color", Color(0.05, 0.12, 0.35))
+	stats_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(stats_label)
+
+	# The car's roster color as a stripe along the bottom edge —
+	# the old grid told cars apart by color, and the stripe keeps
+	# that cue on the cards.
+	var stripe := ColorRect.new()
+	stripe.color = car["color"]
+	stripe.position = Vector2(0, CARD_H - 10)
+	stripe.size = Vector2(CARD_W, 10)
+	stripe.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(stripe)
+
+	# Gold ring: the focus/hover mark. Shown while the card has
+	# keyboard/gamepad focus or the mouse is over it.
+	var ring := _gold_ring()
+	btn.add_child(ring)
+	var state := {"focused": false, "hovered": false, "ring": ring}
+	btn.focus_entered.connect(_on_card_highlight.bind(state, true, "focused"))
+	btn.focus_exited.connect(_on_card_highlight.bind(state, false, "focused"))
+	btn.mouse_entered.connect(_on_card_highlight.bind(state, true, "hovered"))
+	btn.mouse_exited.connect(_on_card_highlight.bind(state, false, "hovered"))
+	# Highlighting a card (keyboard focus or mouse hover) shows its
 	# real model in the preview on the left.
-	btn.focus_entered.connect(_show_preview.bind(car["key"]))
-	btn.mouse_entered.connect(_show_preview.bind(car["key"]))
+	btn.focus_entered.connect(_show_preview.bind(key))
+	btn.mouse_entered.connect(_show_preview.bind(key))
 	return btn
+
+func _on_card_highlight(state: Dictionary, on: bool, which: String) -> void:
+	state[which] = on
+	(state["ring"] as Control).visible = bool(state["focused"]) or bool(state["hovered"])
 
 func _on_car_picked(key: String) -> void:
 	CarData.selected_key = key
