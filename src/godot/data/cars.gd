@@ -1,11 +1,12 @@
 class_name CarData
 extends RefCounted
-# All 64 cars: the 30 Hot Wheels: Beat That! cars (parsed from the real
-# SCR files), 33 Planet Hot Wheels Highway 35 cars, and the Iridium
-# from Hot Wheels Unleashed 2. Base stats in the SCR files are shared
-# (DEFAULT-GEARBOX), so each car gets a distinct top speed / accel
-# derived deterministically from its key. Colors are per-car so every
-# pick looks different on the road.
+# All 72 cars: the 30 Hot Wheels: Beat That! cars (parsed from the real
+# SCR files), 33 Planet Hot Wheels Highway 35 cars, the Iridium
+# from Hot Wheels Unleashed 2, and 8 Hot Wheels Turbo Driver: Race
+# The World cars from the .blend Anthony sent. Base stats in the SCR
+# files are shared (DEFAULT-GEARBOX), so each car gets a distinct top
+# speed / accel derived deterministically from its key. Colors are
+# per-car so every pick looks different on the road.
 
 static var selected_key: String = "BONESHAKER"
 # Which map scene to load when a car is picked. Set by the map
@@ -83,6 +84,22 @@ const CARS: Array = [
 	# Iridium from Hot Wheels Unleashed 2 (Sketchfab, Zorg_Sinister,
 	# CC-BY-4.0) — skinned source, baked to the roster convention.
 	{"key": "IRIDIUM", "name": "Iridium", "color": Color(0.143, 0.781, 0.95), "top_speed": 27.0, "accel": 17.0},
+	# Hot Wheels Turbo Driver: Race The World cars (8) — from the
+	# "Turbo Driver Cars.blend" Anthony sent, exported per car to
+	# .glb (body Y-length scaled to 5.6, nose +Z, wheels as Body
+	# children, textures embedded). Sharkruiser is #7 on Anthony's
+	# Top 10. "Turbo Dakar" (not "Dakar") so it can never be read as
+	# "DaCar" (DACAR) in the grid or the garage. Invader is a
+	# 6-wheeler in the source: the middle front pair are static
+	# rollers, the outer 4 spin.
+	{"key": "ARACHNOROD", "name": "Arachnorod", "color": Color(0.143, 0.700, 0.143), "top_speed": 28.0, "accel": 19.0},
+	{"key": "DAKAR", "name": "Turbo Dakar", "color": Color(0.950, 0.750, 0.400), "top_speed": 26.0, "accel": 18.0},
+	{"key": "DRIFTKING", "name": "Drift King", "color": Color(0.143, 0.500, 0.950), "top_speed": 30.0, "accel": 20.0},
+	{"key": "INVADER", "name": "Invader", "color": Color(0.600, 0.950, 0.143), "top_speed": 27.0, "accel": 19.0},
+	{"key": "JETTHREAT", "name": "Jet Threat 4.0", "color": Color(0.950, 0.143, 0.500), "top_speed": 31.0, "accel": 17.0},
+	{"key": "RD04", "name": "RD-04", "color": Color(0.550, 0.650, 0.750), "top_speed": 29.0, "accel": 18.0},
+	{"key": "SHARKRUISER", "name": "Sharkruiser", "color": Color(0.143, 0.650, 0.800), "top_speed": 28.0, "accel": 20.0},
+	{"key": "STOCKAR", "name": "Stockar", "color": Color(0.950, 0.850, 0.200), "top_speed": 25.0, "accel": 21.0},
 ]
 
 static func get_car(key: String) -> Dictionary:
